@@ -50,8 +50,6 @@ fruit_2.jpg
 fruit_3.jpg
 ```
 
-> ⚠️ If you want to remove the leading zeros (e.g., `fruit_1.jpg` instead of `fruit_001.jpg`), adjust the script by replacing `zfill(padding)` with a plain `str()` conversion.
-
 ## 🚀 Getting Started
 
 ### Requirements
