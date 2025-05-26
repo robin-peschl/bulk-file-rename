@@ -1,35 +1,53 @@
 import os
 from tkinter.filedialog import askdirectory
 
-# Let user select a directory
-renamePath = askdirectory(title='Select directory')
-print(renamePath)
+while True:
+    # wait for user input or exit command
+    user_input = input("Press Enter to select a directory or type EXIT/STOP/E to quit: ").strip().upper()
+    if user_input in ("EXIT", "STOP", "E"):
+        print("Exiting...")
+        break
 
-# Get and sort list of files in the selected directory
-filesInPath = sorted(os.listdir(renamePath))
-print(f"{len(filesInPath)} files found.")
+    # open directory selection dialog
+    renamePath = askdirectory(title='Select directory')
+    if not renamePath:
+        print("No directory selected. Try again.\n")
+        continue
 
-# Ask user for the base name of the files
-print("Type the name of the files")
-rename_string = input()
+    # get and sort files in directory
+    filesInPath = sorted(os.listdir(renamePath))
+    if not filesInPath:
+        print("No files in selected directory. Try again.\n")
+        continue
 
-# Ask user for the starting number
-print("Type the starting number")
-fileNumberCounter = int(input())
+    print(f"{len(filesInPath)} files found in:\n{renamePath}")
 
-# Calculate padding based on total number of files and starting number
-total_files = len(filesInPath)
-padding = len(str(total_files + fileNumberCounter - 1))  # Ensures consistent width
+    # get base name
+    rename_string = input("Enter base name: ")
 
-# Rename files with leading zeros
-for filename in filesInPath:
-    fileName, fileExtension = os.path.splitext(filename)
-    padded_number = str(fileNumberCounter).zfill(padding)
-    new_name = f"{rename_string}{padded_number}{fileExtension}"
+    # get starting number
+    while True:
+        try:
+            fileNumberCounter = int(input("Enter starting number: "))
+            break
+        except ValueError:
+            print("Invalid number. Try again.")
 
-    os.rename(
-        os.path.join(renamePath, filename),
-        os.path.join(renamePath, new_name)
-    )
+    # calculate number padding
+    total_files = len(filesInPath)
+    padding = len(str(total_files + fileNumberCounter - 1))
 
-    fileNumberCounter += 1
+    # rename files
+    for filename in filesInPath:
+        fileName, fileExtension = os.path.splitext(filename)
+        padded_number = str(fileNumberCounter).zfill(padding)
+        new_name = f"{rename_string}{padded_number}{fileExtension}"
+
+        os.rename(
+            os.path.join(renamePath, filename),
+            os.path.join(renamePath, new_name)
+        )
+
+        fileNumberCounter += 1
+
+    print("Files renamed successfully.\n")
